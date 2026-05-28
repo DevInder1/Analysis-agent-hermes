@@ -1,0 +1,23 @@
+# Python
+backend/.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Node / Angular
+frontend/enterprise-dashboard/node_modules/
+frontend/enterprise-dashboard/dist/
+frontend/enterprise-dashboard/.angular/
+
+# Environment & secrets
+.env
+*.local
+
+# Data artifacts
+data/vuln-report.json
+data/analysis.db
+data/analysis.db-journal
+
+# OS
+.DS_Store

@@ -1,0 +1,41 @@
+employee_id,department,training_hours,project_completion_rate
+E001,Engineering,52,0.96
+E002,Engineering,38,0.91
+E003,Engineering,28,0.84
+E004,Engineering,48,0.95
+E005,Engineering,22,0.79
+E006,Engineering,44,0.93
+E007,Engineering,16,0.76
+E008,Engineering,36,0.88
+E009,Engineering,56,0.97
+E010,Engineering,40,0.92
+E011,Product,32,0.89
+E012,Product,24,0.82
+E013,Product,18,0.77
+E014,Product,42,0.94
+E015,Product,12,0.71
+E016,Product,28,0.86
+E017,Sales,8,0.68
+E018,Sales,14,0.74
+E019,Sales,6,0.62
+E020,Sales,20,0.81
+E021,Sales,10,0.70
+E022,Finance,16,0.80
+E023,Finance,24,0.85
+E024,Finance,12,0.73
+E025,Finance,30,0.88
+E026,HR,28,0.87
+E027,HR,36,0.90
+E028,HR,20,0.82
+E029,HR,14,0.75
+E030,Operations,18,0.78
+E031,Operations,26,0.84
+E032,Operations,34,0.89
+E033,Legal,10,0.72
+E034,Legal,8,0.70
+E035,Marketing,22,0.83
+E036,Marketing,16,0.79
+E037,Customer Success,30,0.88
+E038,Customer Success,24,0.85
+E039,Customer Success,12,0.74
+E040,IT Support,20,0.81

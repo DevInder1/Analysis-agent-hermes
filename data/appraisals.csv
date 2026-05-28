@@ -1,0 +1,24 @@
+employee_id,cycle,status,self_goals,self_accomplishments,manager_rating,manager_feedback
+E001,2026-annual,completed,Lead Nexus ERP cutover; mentor 2 engineers.,Delivered Phase 1 on time; reduced incident rate 18%.,5,Exceptional technical leadership during ERP migration.
+E002,2026-annual,pending_manager,Own Data Lake ingestion pipelines; improve test coverage to 80%.,Shipped 3 pipelines; documented runbooks for on-call.,4,Strong delivery; needs more cross-team communication.
+E003,2026-annual,pending_self,,,,
+E004,2026-annual,completed,Drive Customer 360 API standards; reduce P95 latency 20%.,Achieved 24% latency improvement; led security review.,5,Consistently exceeds expectations.
+E005,2026-annual,pending_self,,,,
+E006,2026-annual,pending_manager,Complete IoT edge gateway; stabilize factory rollout.,Rolled out to 4 plants; 2 production incidents resolved.,3,Meets expectations; travel-heavy project impacted focus.
+E007,2026-annual,pending_self,,,,
+E008,2026-annual,completed,Deliver Greenfield mobile auth module; OWASP top-10 review.,Released auth v2; zero critical findings in pen test.,4,Reliable execution on security-sensitive work.
+E009,2026-annual,pending_self,,,,
+E010,2026-annual,pending_manager,Scale AI copilot pilot to 500 users; define success metrics.,Pilot live with 320 users; NPS +12 vs baseline.,4,High impact pilot; document learnings for GA decision.
+E011,2026-annual,pending_self,,,,
+E012,2026-annual,pending_self,,,,
+E013,2026-annual,completed,Ship HR portal self-service leave; manager approval workflow.,Portal live; 89% adoption in HRIS survey.,4,Delivered on schedule with strong UX feedback.
+E014,2026-annual,pending_manager,Launch 2 enterprise deals in EMEA; maintain pipeline 3x quota.,Closed Acme Corp ($1.2M); pipeline at 2.4x.,3,Meets quota; improve forecast accuracy.
+E015,2026-annual,pending_self,,,,
+E016,2026-annual,pending_self,,,,
+E017,2026-annual,pending_self,,,,
+E018,2026-annual,pending_manager,,,,
+E022,2026-annual,pending_self,,,,
+E026,2026-annual,completed,Redesign appraisal process in HRIS; train all managers.,New workflow deployed; 100% manager training complete.,5,Outstanding partnership with HR leadership.
+E027,2026-annual,pending_manager,Reduce month-end close from 8 to 5 days.,Achieved 6-day close in Q3; automation backlog prioritized.,4,Strong progress on Finance Close Automation support.
+E030,2026-annual,pending_self,,,,
+E037,2026-annual,pending_manager,Improve enterprise NPS from 42 to 50.,NPS reached 47; escalation volume down 15%.,3,Good progress; focus on root-cause fixes in Q1.

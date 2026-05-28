@@ -1,0 +1,17 @@
+# Merge into ~/.hermes/config.yaml
+
+mcp_servers:
+  business-data:
+    command: python
+    args:
+      - backend/mcp_servers/business_data.py
+    cwd: /Users/inderpreet/Documents/analysis-agent
+
+# API server for Angular SSE (enable in hermes setup or env)
+# API_SERVER_ENABLED: true
+# API_SERVER_PORT: 8642
+# API_SERVER_HOST: 127.0.0.1
+
+# Ollama provider example (set during hermes setup):
+# provider: ollama
+# model: gemma4:e4b

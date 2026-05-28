@@ -1,0 +1,29 @@
+# Example ~/.hermes/config.yaml sections — merge manually after `hermes setup`
+
+# Primary model via Ollama (local)
+provider: ollama
+model: gemma4:e4b
+
+# OpenAI-compatible API for Angular dashboard
+api_server:
+  enabled: true
+  host: 127.0.0.1
+  port: 8642
+  # key: optional-bearer-token
+
+mcp_servers:
+  business-data:
+    command: python
+    args:
+      - backend/mcp_servers/business_data.py
+    cwd: /Users/inderpreet/Documents/analysis-agent
+    env:
+      DATA_DIR: /Users/inderpreet/Documents/analysis-agent/data
+
+# Nightly vulnerability scan (create via CLI):
+# hermes cron create "every day at 02:00" \
+#   "Run check_vulnerabilities via business-data MCP. Summarize critical/high findings." \
+#   --workdir /Users/inderpreet/Documents/analysis-agent \
+#   --name nightly-vuln-scan
+#
+# Or no-agent script: scripts/nightly-vuln-check.sh
