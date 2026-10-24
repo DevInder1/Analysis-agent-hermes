@@ -2,7 +2,7 @@
 
 # Primary model via Ollama (local)
 provider: ollama
-model: gemma4:e4b
+model: gemma4-hermes
 
 # OpenAI-compatible API for Angular dashboard
 api_server:
@@ -10,6 +10,11 @@ api_server:
   host: 127.0.0.1
   port: 8642
   # key: optional-bearer-token
+
+platform_toolsets:
+  api_server:
+    - business-data
+    - company-knowledge
 
 mcp_servers:
   business-data:

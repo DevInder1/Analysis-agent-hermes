@@ -5,6 +5,7 @@ import type { ChatMessage } from '../models/chat-message';
 import type { GridState } from '../models/grid-data';
 import { getCompanyQueryIntent, tryLocalCompanyQuery } from './local-query-handler';
 import { extractGridFromText } from '../utils/grid-parser';
+import { mergeToolGrids, readResponseEvent, type HermesStreamEvent } from '../utils/hermes-stream';
 
 function formatHermesError(e: unknown): string {
   if (e instanceof TypeError && /fetch|network/i.test(e.message)) {
@@ -68,13 +69,14 @@ export class HermesChatService {
         this.patchAssistant(assistantId, local.summary, false);
         return;
       }
-      await this.streamCompletion(messages, assistantId);
+      await this.streamResponse(messages, assistantId);
     } catch (e) {
       const msg = formatHermesError(e);
       this.error.set(msg);
       this.patchAssistant(assistantId, `Error: ${msg}`, false);
     } finally {
       this.isStreaming.set(false);
+      this.toolStatus.set(null);
       this.abortController = null;
     }
   }
@@ -89,11 +91,11 @@ export class HermesChatService {
     await this.sendMessage('Show budget status for all projects');
   }
 
-  private async streamCompletion(
+  private async streamResponse(
     messages: { role: string; content: string }[],
     assistantId: string,
   ): Promise<void> {
-    const url = `${environment.hermesApiUrl}/v1/chat/completions`;
+    const url = `${environment.hermesApiUrl}/v1/responses`;
     // Omit X-Hermes-Session-Id: Hermes CORS allowlist blocks it on cross-origin
     // requests. Full message history is sent each turn instead.
     const headers: Record<string, string> = {
@@ -108,20 +110,16 @@ export class HermesChatService {
       headers,
       body: JSON.stringify({
         model: environment.hermesModel,
-        messages: [
-          {
-            role: 'system',
-            content:
-              'You are the enterprise knowledge worker. Always use MCP tools for factual answers — never guess. ' +
-              'business-data: projects, employees, vulnerabilities. ' +
-              'company-knowledge: query_budget_status (budget/travel alerts), search_hr_policies, read_travel_guidelines, appraisal tools. ' +
-              'For travel budget alerts use query_budget_status with over_budget_travel_only=true. ' +
-              'Include ```json grid blocks when tools return a grid field.',
-          },
-          ...messages,
-        ],
+        instructions:
+          'You are the enterprise knowledge worker. Always use MCP tools for factual answers — never guess. ' +
+          'business-data: projects, employees, vulnerabilities. ' +
+          'company-knowledge: query_budget_status (budget/travel alerts), search_hr_policies, read_travel_guidelines, appraisal tools. ' +
+          'For travel budget alerts use query_budget_status with over_budget_travel_only=true. ' +
+          'The dashboard shows tool results as a table and chart automatically, so summarize the key findings ' +
+          'in a few sentences instead of repeating every row.',
+        input: messages,
         stream: true,
-        stream_tool_progress: true,
+        store: false,
       }),
       signal: this.abortController?.signal,
     });
@@ -138,6 +136,7 @@ export class HermesChatService {
     const decoder = new TextDecoder();
     let buffer = '';
     let fullText = '';
+    let toolGrid: GridState | null = null;
 
     while (true) {
       const { done, value } = await reader.read();
@@ -148,37 +147,42 @@ export class HermesChatService {
       buffer = lines.pop() ?? '';
 
       for (const line of lines) {
-        if (line.startsWith('event: ')) {
-          const event = line.slice(7).trim();
-          if (event === 'hermes.tool.progress') {
-            this.toolStatus.set('Running tool…');
-          }
-          continue;
-        }
         if (!line.startsWith('data: ')) continue;
 
-        const payload = line.slice(6).trim();
-        if (payload === '[DONE]') continue;
-
+        let event: HermesStreamEvent;
         try {
-          const chunk = JSON.parse(payload) as {
-            choices?: { delta?: { content?: string } }[];
-          };
-          const delta = chunk.choices?.[0]?.delta?.content;
-          if (delta) {
-            fullText += delta;
-            this.patchAssistant(assistantId, fullText, true);
-          }
+          event = readResponseEvent(JSON.parse(line.slice(6)));
         } catch {
-          // non-JSON SSE lines ignored
+          continue;
+        }
+
+        switch (event.kind) {
+          case 'text':
+            fullText += event.delta;
+            this.patchAssistant(assistantId, fullText, true);
+            break;
+          case 'tool_start':
+            this.toolStatus.set(`Running ${event.label}…`);
+            break;
+          case 'tool_result':
+            this.toolStatus.set(null);
+            if (event.grid) {
+              toolGrid = mergeToolGrids(toolGrid, event.grid);
+              this.tableData.set(toolGrid);
+            }
+            break;
+          case 'failed':
+            throw new Error(event.message);
         }
       }
     }
 
     this.patchAssistant(assistantId, fullText, false);
-    const grid = extractGridFromText(fullText);
-    if (grid) {
-      this.tableData.set(grid);
+    if (!toolGrid) {
+      const grid = extractGridFromText(fullText);
+      if (grid) {
+        this.tableData.set(grid);
+      }
     }
   }
 

@@ -5,16 +5,18 @@ import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 
 import type { GridState } from '../../models/grid-data';
 import { HermesChatService } from '../../services/hermes-chat.service';
+import { AutoChartComponent } from '../auto-chart/auto-chart.component';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-data-grid',
-  imports: [AgGridAngular],
+  imports: [AgGridAngular, AutoChartComponent],
   template: `
     <section class="grid-panel">
       <h2>Data</h2>
       @if (grid(); as g) {
+        <app-auto-chart [grid]="g" />
         <ag-grid-angular
           class="ag-theme-quartz grid"
           [rowData]="g.rowData"
@@ -38,6 +40,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
       flex-direction: column;
       height: 100%;
       min-height: 0;
+      overflow-y: auto;
     }
     h2 {
       margin: 0 0 0.75rem;
@@ -45,7 +48,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
       font-weight: 600;
     }
     .grid {
-      flex: 1;
+      flex: 1 0 300px;
       width: 100%;
       min-height: 280px;
     }
